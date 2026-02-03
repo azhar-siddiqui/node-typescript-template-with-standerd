@@ -31,3 +31,7 @@ pnpm start
 ## Usage
 
 This is a Hello World app that prints "Hello, World!" to the console.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
