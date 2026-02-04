@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import { errorMiddleware } from './middleware/error';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -47,8 +48,9 @@ app.use(
   })
 );
 // Body parsers and cookie parser
-app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ limit: '1mb', extended: true }));
+app.use(express.static('public'));
 app.use(cookieParser());
 // Trust proxy for rate limiting
 app.set('trust proxy', 1);
@@ -63,11 +65,11 @@ const limiter = rateLimit({
     status: 429,
     message: 'Too many requests. Please try again later.',
   },
-  keyGenerator: (req) => req.ip || 'unknown',
 });
 
 // Apply the rate limiter to all requests
 app.use(limiter);
+app.use(errorMiddleware);
 
 // Routes
 app.get('/', (req, res) => {
@@ -76,5 +78,5 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port http://localhost:${PORT}`);
 });
