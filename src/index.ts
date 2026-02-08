@@ -3,10 +3,11 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
+import { env } from './lib/env';
 import { errorMiddleware } from './middleware/error';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(env.PORT) || 3000;
 
 // Middleware
 app.use(express.json());
