@@ -3,8 +3,9 @@ import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
-import { env } from './lib/env';
-import { errorMiddleware } from './middleware/error';
+import { env } from './lib/env.js';
+import { prisma } from './lib/prisma.js';
+import { errorMiddleware } from './middleware/error/index.js';
 
 const app = express();
 const PORT = Number(env.PORT) || 3000;
@@ -73,11 +74,12 @@ app.use(limiter);
 app.use(errorMiddleware);
 
 // Routes
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello World!' });
+app.get('/', async (req, res) => {
+  const data = await prisma.doctor.findMany();
+  res.json({ message: 'Hello World!', data: data });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
+  console.log(`Server is up and running on port http://localhost:${PORT}`);
 });

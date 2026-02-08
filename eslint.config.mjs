@@ -46,6 +46,15 @@ export default [
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', '*.js', '*.log'],
+    ignores: [
+      'node_modules/',
+      'dist/',
+      '*.js',
+      '*.log',
+      '*.lock',
+      'package-lock.json',
+      'pnpm-lock.yaml',
+      '.prisma/',
+    ],
   },
 ];

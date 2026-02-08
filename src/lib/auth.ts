@@ -1,10 +1,12 @@
 import bcrypt from 'bcryptjs';
 import { SignJWT, jwtVerify } from 'jose';
 import crypto from 'node:crypto';
-import { Role } from '../generated/prisma/enums';
-import { LoggedInUser } from '../types/login-user';
-import { env } from './env';
-import { prisma } from './prisma';
+
+import { LoggedInUser } from '../types/login-user.js';
+import { env } from './env.js';
+
+import { Role } from '../generated/prisma/enums.js';
+import { prisma } from './prisma.js';
 
 // Secrets
 const ACCESS_TOKEN_SECRET = new TextEncoder().encode(env.ACCESS_TOKEN_SECRET);
@@ -169,14 +171,14 @@ export async function checkUserPermission(
   user: LoggedInUser,
   requiredRole: Role
 ): Promise<boolean> {
-  const roleHierarchy = {
-    [Role.KEY_ADMIN]: 4,
-    [Role.ADMIN]: 3,
-    [Role.DOCTOR]: 2,
-    [Role.PATIENT]: 1,
-    [Role.USER]: 0,
-  } as Record<Role, number>;
-  return roleHierarchy[user.role] >= roleHierarchy[requiredRole];
+  const roleHierarchy = new Map<Role, number>([
+    [Role.KEY_ADMIN, 4],
+    [Role.ADMIN, 3],
+    [Role.DOCTOR, 2],
+    [Role.PATIENT, 1],
+    [Role.USER, 0],
+  ]);
+  return roleHierarchy.get(user.role)! >= roleHierarchy.get(requiredRole)!;
 }
 
 export function mapDbUserToLoggedInUser(found: unknown): LoggedInUser | null {
